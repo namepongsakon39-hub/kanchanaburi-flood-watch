@@ -1,61 +1,237 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kanchanaburi Flood Watch</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #eef5f9;
-      color: #17324d;
-    }
-    header {
-      background: #123c5a;
-      color: white;
-      padding: 24px 20px;
-    }
-    main {
-      max-width: 850px;
-      margin: 30px auto;
-      padding: 24px;
-    }
-    section {
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-    }
-    .status {
-      color: #8a5a00;
-      background: #fff3cd;
-      padding: 12px;
-      border-radius: 8px;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>เฝ้าระวังน้ำท่วม กาญจนบุรี</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef3f1;--surf:#fff;--ink:#12302f;--mut:#5b7170;--line:#d2dedb;--river:#0f5c63;
+--r0:#2f855a;--r1:#b7791f;--r2:#c05621;--r3:#c53030;--r0b:#e3f3ea;--r1b:#fbefd5;--r2b:#fce5d6;--r3b:#fbdcdc;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1d1e;--surf:#142a2b;--ink:#e6f1ef;--mut:#97b0ae;--line:#254344;--river:#5fc3cb;
+--r0:#68d391;--r1:#f6c453;--r2:#f6955a;--r3:#fc8181;--r0b:#183b2b;--r1b:#43361a;--r2b:#47281a;--r3b:#4a2121}}
+:root[data-theme="dark"]{--bg:#0d1d1e;--surf:#142a2b;--ink:#e6f1ef;--mut:#97b0ae;--line:#254344;--river:#5fc3cb;
+--r0:#68d391;--r1:#f6c453;--r2:#f6955a;--r3:#fc8181;--r0b:#183b2b;--r1b:#43361a;--r2b:#47281a;--r3b:#4a2121}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Thai","Noto Sans Thai",Tahoma,sans-serif;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+.wrap{max-width:1080px;margin:0 auto;padding:16px}
+h1{font-size:1.5rem;margin:.2rem 0 0}
+h2{font-size:1.05rem;margin:0 0 .6rem}
+.sub{color:var(--mut);margin:0 0 14px;font-size:.92rem}
+.banner{border-radius:10px;padding:16px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;border:2px solid var(--c);background:var(--b)}
+.banner b{font-size:1.35rem}.banner p{margin:0;flex:1;min-width:220px}
+.counts{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:2px 10px;border-radius:99px;border:1px solid var(--c);background:var(--b);color:var(--c);font-size:.85rem;font-weight:500}
+.l0{--c:var(--r0);--b:var(--r0b)}.l1{--c:var(--r1);--b:var(--r1b)}.l2{--c:var(--r2);--b:var(--r2b)}.l3{--c:var(--r3);--b:var(--r3b)}
+.banner b,.badge{color:var(--c)}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;margin-top:16px}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:14px}
+.st{border-top:1px solid var(--line);padding:14px 0}.st:first-of-type{border-top:0;padding-top:4px}
+.sth{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.sth strong{display:block}.sth small{color:var(--mut)}
+.badge{border:1px solid var(--c);background:var(--b);padding:1px 10px;border-radius:6px;font-size:.85rem;font-weight:700;white-space:nowrap}
+.gauge{position:relative;height:30px;margin:10px 0 2px;background:linear-gradient(90deg,var(--r0b) 0 var(--p0),var(--r1b) var(--p0) var(--p1),var(--r2b) var(--p1) var(--p2),var(--r3b) var(--p2));border-radius:6px;border:1px solid var(--line);overflow:hidden}
+.fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--river);opacity:.85;transition:width .5s}
+.tick{position:absolute;top:0;bottom:0;width:2px;background:var(--ink);opacity:.45}
+.scale{display:flex;justify-content:space-between;font-size:.75rem;color:var(--mut)}
+.ins{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+label{font-size:.85rem;color:var(--mut);display:flex;flex-direction:column;gap:2px}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input,select,textarea{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%}
+.ins input{width:96px}
+button{background:var(--river);color:var(--bg);border:0;border-radius:6px;padding:8px 14px;font-weight:500;cursor:pointer}
+:focus-visible{outline:3px solid var(--river);outline-offset:2px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tabs button{background:var(--surf);color:var(--ink);border:1px solid var(--line)}
+.tabs button[aria-pressed="true"]{background:var(--river);color:var(--bg)}
+ul.log{list-style:none;margin:0;padding:0;max-height:260px;overflow:auto}
+ul.log li{padding:8px 0;border-top:1px solid var(--line);font-size:.9rem}ul.log li:first-child{border-top:0}
+ul.log time{color:var(--mut);font-size:.78rem;display:block}
+.chk label{flex-direction:row;align-items:flex-start;gap:8px;color:var(--ink);font-size:.92rem;margin:6px 0}
+.chk input{width:auto;margin-top:6px}
+.tel{display:flex;flex-wrap:wrap;gap:8px}
+.tel a{border:1px solid var(--line);border-radius:6px;padding:6px 12px;color:var(--ink);text-decoration:none;background:var(--bg)}
+.tel a b{color:var(--r3)}
+.note{font-size:.82rem;color:var(--mut);margin-top:16px}
+.side{display:flex;flex-direction:column;gap:16px;min-width:0}
+.live{margin-top:16px}.lmsg{color:var(--mut);font-size:.92rem}
+.lstats{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:10px}
+.lstats div{min-width:84px}.lstats b{display:block;font-size:1.3rem}.lstats span{font-size:.8rem;color:var(--mut)}
+.mc{display:flex;align-items:flex-end;gap:1px;height:56px;border-bottom:1px solid var(--line)}
+.mc i{flex:1;background:var(--river);min-height:2px;opacity:.85;border-radius:1px 1px 0 0}
+.lfoot{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.8rem;color:var(--mut);margin-top:4px}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 10px}
+.links a{border:1px solid var(--river);color:var(--river);border-radius:6px;padding:6px 12px;text-decoration:none;font-weight:500;background:var(--bg)}
+.links a:hover{background:var(--river);color:var(--bg)}
+.mapwrap{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:16px;align-items:start}
+@media(max-width:720px){.mapwrap{grid-template-columns:1fr}}
+#kmap{width:100%;height:auto;background:var(--bg);border:1px solid var(--line);border-radius:8px}
+#kmap text{fill:var(--ink);font-family:inherit;font-size:11px;paint-order:stroke;stroke:var(--bg);stroke-width:3px}
+#kmap .pt{cursor:pointer}
+.mleg{display:grid;gap:4px;margin-bottom:10px;font-size:.88rem}.mleg span{display:flex;align-items:center;gap:8px}
+.mleg i{width:18px;height:18px;border-radius:50%;border:2px solid var(--ink);display:inline-block}
+.lchk{flex-direction:row;align-items:center;gap:8px;margin-top:10px;color:var(--ink)}.lchk input{width:auto}
+</style>
 </head>
 <body>
-  <header>
-    <h1>Kanchanaburi Flood Watch</h1>
-    <p>ระบบติดตามข้อมูลฝนและเฝ้าระวังน้ำท่วม จังหวัดกาญจนบุรี</p>
-  </header>
+<div class="wrap">
+  <h1>เฝ้าระวังน้ำท่วม จังหวัดกาญจนบุรี</h1>
+  <p class="sub">น้ำป่าไหลหลาก · น้ำท่วมเมือง · ตั้งค่าเกณฑ์และบันทึกค่าล่าสุดจากสถานีที่คุณติดตาม</p>
 
-  <main>
-    <section>
-      <h2>ข้อมูลเฝ้าระวังสภาพอากาศ</h2>
-      <p class="status">
-        ระบบอยู่ระหว่างการตั้งค่า ยังไม่มีข้อมูลฝนสดที่ผ่านการตรวจสอบ
-      </p>
-      <p>
-        เว็บไซต์นี้จัดทำขึ้นเพื่อช่วยติดตามข้อมูลและสนับสนุน
-        การเฝ้าระวังความเสี่ยงน้ำท่วม
-      </p>
-      <p>
-        โปรดตรวจสอบประกาศเตือนภัยจากหน่วยงานราชการ
-        ก่อนตัดสินใจเกี่ยวกับความปลอดภัย
-      </p>
+  <div id="banner" class="banner l0" role="status" aria-live="polite"></div>
+
+
+  <section class="card live" aria-labelledby="h-map">
+    <h2 id="h-map">แผนที่ฝนสะสม 24 ชม. จังหวัดกาญจนบุรี (ข้อมูลพยากรณ์ตัวเลข Open-Meteo)</h2>
+    <div class="mapwrap"><svg id="kmap" viewBox="0 0 400 420" role="img" aria-label="แผนผังจังหวัดกาญจนบุรี แสดงปริมาณฝนสะสม 24 ชั่วโมงรายอำเภอ"></svg>
+    <div><div id="mlegend" class="mleg"></div><p id="mapMsg" class="lmsg">กำลังดึงข้อมูลฝน…</p><p id="mapDet" class="lmsg">แตะจุดบนแผนที่เพื่อดูรายละเอียด</p>
+    <div class="links"><a href="https://weather.tmd.go.th/" target="_blank" rel="noopener noreferrer">เรดาร์ฝน กรมอุตุฯ (TMD)</a><a href="https://www.thaiwater.net/" target="_blank" rel="noopener noreferrer">แผนที่ฝนและระดับน้ำ ThaiWater</a></div>
+    <button type="button" id="fillRain">เติมค่าฝน 24 ชม. จากแผนที่ให้ทุกสถานี</button>
+    <p class="lmsg">แผนผังนี้วาดโดยประมาณ ตำแหน่งจุดตามพิกัดอำเภอ ไม่ใช่เส้นเขตแดนจริง สีแบ่งตามเกณฑ์ฝนสะสม 24 ชม. ที่กรมอุตุนิยมวิทยาใช้จัดระดับ วงประคือฝนที่คาดว่าจะตกใน 1 ชม.ข้างหน้า</p></div></div>
+  </section>
+
+  <section class="card live" aria-labelledby="h-sat">
+    <h2 id="h-sat">แผนที่ฝนสะสมจากดาวเทียม (อัปเดตอัตโนมัติ)</h2>
+    <img src="rain_map.png" alt="แผนที่ฝนสะสม 7 วัน จังหวัดกาญจนบุรี จากข้อมูลดาวเทียม CHIRPS" style="max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line)" onerror="this.style.display='none';document.getElementById('satMsg').hidden=false">
+    <p id="satMsg" class="lmsg" hidden>ยังไม่มีภาพแผนที่ ไปที่แท็บ Actions ใน GitHub แล้วรันขั้นตอน "Build rain map" หนึ่งครั้ง</p>
+    <p class="lmsg">ข้อมูล CHIRPS (ดาวเทียมผสานสถานีวัดฝน) ล่าช้าหลายวัน ใช้ดูภาพรวมย้อนหลัง ไม่ใช่ฝนตอนนี้</p>
+  </section>
+
+  <div class="grid">
+    <section class="card" aria-labelledby="h-st">
+      <h2 id="h-st">สถานีเฝ้าระวัง</h2>
+      <div class="tabs" id="tabs"></div>
+      <div id="stations"></div>
     </section>
-  </main>
+
+    <div class="side">
+      <section class="card">
+        <h2>แจ้งเหตุจากชุมชน</h2>
+        <form id="rf" onsubmit="return false" style="display:grid;gap:8px">
+          <label>อำเภอ<select id="rd"></select></label>
+          <label>สถานการณ์<select id="rt"><option>น้ำป่าไหลหลาก</option><option>น้ำท่วมขังในเมือง</option><option>น้ำล้นตลิ่ง</option><option>ถนนถูกตัดขาด</option></select></label>
+          <label>รายละเอียด<textarea id="rn" rows="2" placeholder="เช่น น้ำสูงประมาณ 50 ซม. หน้าตลาด"></textarea></label>
+          <button type="button" id="rb">บันทึกรายงาน</button>
+        </form>
+      </section>
+      <section class="card">
+        <h2>บันทึกเหตุการณ์</h2>
+        <ul class="log" id="log"><li>ยังไม่มีเหตุการณ์ ระบบจะบันทึกเมื่อระดับความเสี่ยงของสถานีเปลี่ยน</li></ul>
+      </section>
+      <section class="card chk">
+        <h2 id="ch">สิ่งที่ควรทำ</h2>
+        <div id="acts"></div>
+      </section>
+      <section class="card">
+        <h2>โทรขอความช่วยเหลือ</h2>
+        <div class="tel">
+          <a href="tel:1784"><b>1784</b> ปภ.</a><a href="tel:191"><b>191</b> เหตุด่วน</a>
+          <a href="tel:1669"><b>1669</b> การแพทย์ฉุกเฉิน</a><a href="tel:199"><b>199</b> ดับเพลิง</a>
+        </div>
+      </section>
+    </div>
+  </div>
+  <p class="note">ค่าสถานีเริ่มต้นในหน้านี้เป็นข้อมูลตัวอย่างเพื่อสาธิตการทำงาน ไม่ใช่ค่าจริง กรุณาตรวจค่าจริงจาก ปภ., กรมอุตุนิยมวิทยา และ ThaiWater ก่อนตัดสินใจอพยพ ข้อมูลฝนบนแผนที่มาจาก Open-Meteo (CC BY 4.0)</p>
+</div>
+
+<script>
+var DISTRICTS=["เมืองกาญจนบุรี","ไทรโยค","บ่อพลอย","ศรีสวัสดิ์","ท่ามะกา","ท่าม่วง","ทองผาภูมิ","สังขละบุรี","พนมทวน","เลาขวัญ","ด่านมะขามเตี้ย","หนองปรือ","ห้วยกระเจา"];
+var LV=["ปกติ","เฝ้าระวัง","เตือนภัย","อันตราย"];
+var ST=[
+{id:"s1",name:"แม่น้ำแควใหญ่ (ตัวเมือง)",d:"เมืองกาญจนบุรี",type:"แม่น้ำ",max:10,t:[6,7.5,8.8],level:4.2,rain:12,rise:0},
+{id:"s2",name:"แม่น้ำแควน้อย",d:"ไทรโยค",type:"แม่น้ำ",max:12,t:[7,9,10.5],level:5.1,rain:20,rise:0.1},
+{id:"s3",name:"ลำห้วยสายหลัก",d:"ทองผาภูมิ",type:"น้ำป่า",max:4,t:[1.5,2.3,3],level:0.8,rain:35,rise:0.1},
+{id:"s4",name:"ลำห้วยต้นน้ำ",d:"สังขละบุรี",type:"น้ำป่า",max:4,t:[1.5,2.3,3],level:1.0,rain:48,rise:0.2},
+{id:"s5",name:"ระบบระบายน้ำถนนแสงชูโต",d:"เมืองกาญจนบุรี",type:"น้ำท่วมเมือง",max:0.8,t:[0.15,0.3,0.5],level:0.05,rain:10,rise:0},
+{id:"s6",name:"แม่น้ำแม่กลอง",d:"ท่ามะกา",type:"แม่น้ำ",max:10,t:[6.5,8,9.2],level:4.8,rain:15,rise:0}];
+var FILTERS=["ทั้งหมด","น้ำป่า","น้ำท่วมเมือง","แม่น้ำ"],filter="ทั้งหมด",prev={},logs=[],acts={};
+var ACTS=[["เตรียมกระเป๋าฉุกเฉิน เอกสารสำคัญ และยาประจำตัว"],["ย้ายของมีค่าและรถขึ้นที่สูง ตัดไฟชั้นล่างเมื่อน้ำเริ่มเข้าบ้าน"],["ออกห่างลำห้วย ร่องน้ำ และเชิงเขา ไม่ข้ามทางน้ำไหลแรง"],["แจ้งผู้ใหญ่บ้านหรือ ปภ. 1784 และเตรียมอพยพตามประกาศ"]];
+function $(i){return document.getElementById(i)}
+function save(){try{localStorage.setItem("kfw",JSON.stringify({st:ST.map(function(s){return[s.level,s.rain,s.rise]}),logs:logs}))}catch(e){}}
+function load(){try{var j=JSON.parse(localStorage.getItem("kfw")||"null");if(j){j.st.forEach(function(v,i){if(ST[i]){ST[i].level=v[0];ST[i].rain=v[1];ST[i].rise=v[2]}});logs=j.logs||[]}}catch(e){}}
+function risk(s){var l=s.level>=s.t[2]?3:s.level>=s.t[1]?2:s.level>=s.t[0]?1:0;
+var r=s.rain>=90?2:s.rain>=50?1:0; if(s.type!=="แม่น้ำ"&&s.rain>=90)r=3;
+var q=s.type==="น้ำป่า"&&s.rise>=0.5?2:0; return Math.max(l,r,q)}
+function pct(s,v){return Math.min(100,v/s.max*100)}
+function build(){var h="";ST.forEach(function(s){
+var p=s.t.map(function(v){return pct(s,v)});
+h+='<div class="st" id="w'+s.id+'" data-type="'+s.type+'"><div class="sth"><div><strong>'+s.name+'</strong><small>อ.'+s.d+' · '+s.type+'</small></div><span class="badge" id="b'+s.id+'"></span></div>'
++'<div class="gauge" style="--p0:'+p[0]+'%;--p1:'+p[1]+'%;--p2:'+p[2]+'%" role="img" aria-label="ระดับน้ำเทียบเกณฑ์"><div class="fill" id="f'+s.id+'"></div>'+p.map(function(x){return'<i class="tick" style="left:'+x+'%"></i>'}).join("")+'</div>'
++'<div class="scale"><span>0</span><span>เฝ้าระวัง '+s.t[0]+'</span><span>เตือน '+s.t[1]+'</span><span>อันตราย '+s.t[2]+' ม.</span></div>'
++'<div class="ins"><label>ระดับน้ำ (ม.)<input type="number" step="0.05" min="0" id="l'+s.id+'" value="'+s.level+'"></label>'
++'<label>ฝน 24 ชม. (มม.)<input type="number" step="1" min="0" id="r'+s.id+'" value="'+s.rain+'"></label>'
++'<label>น้ำขึ้น (ม./ชม.)<input type="number" step="0.1" min="0" id="u'+s.id+'" value="'+s.rise+'"></label></div></div>';});
+$("stations").innerHTML=h;
+ST.forEach(function(s){["l","r","u"].forEach(function(k){$(k+s.id).addEventListener("input",function(){
+s.level=+$("l"+s.id).value||0;s.rain=+$("r"+s.id).value||0;s.rise=+$("u"+s.id).value||0;update(true);save()})});prev[s.id]=risk(s)})}
+function now(){return new Date().toLocaleString("th-TH",{dateStyle:"short",timeStyle:"short"})}
+function addLog(t,l){logs.unshift({t:t,l:l,at:now()});logs=logs.slice(0,30);renderLog()}
+function renderLog(){if(!logs.length)return;var u=$("log");u.innerHTML="";logs.forEach(function(e){var li=document.createElement("li");li.className="l"+e.l;
+var tm=document.createElement("time");tm.textContent=e.at;li.appendChild(tm);li.appendChild(document.createTextNode(e.t));u.appendChild(li)})}
+function update(fromInput){var c=[0,0,0,0],top=0;
+ST.forEach(function(s){var r=risk(s);c[r]++;top=Math.max(top,r);
+$("f"+s.id).style.width=pct(s,s.level)+"%";var b=$("b"+s.id);b.textContent=LV[r];b.className="badge l"+r;
+if(fromInput&&r!==prev[s.id]){addLog(s.name+" อ."+s.d+": "+LV[prev[s.id]]+" → "+LV[r],r);save()}prev[s.id]=r});
+var bn=$("banner");bn.className="banner l"+top;
+var msg=["ทุกสถานีอยู่ในเกณฑ์ปกติ ติดตามค่าฝนและระดับน้ำต่อเนื่อง","มีสถานีที่ต้องเฝ้าระวัง ติดตามสถานการณ์ใกล้ชิด","มีสถานีเตือนภัย เตรียมพร้อมอพยพและแจ้งเพื่อนบ้าน","มีสถานีระดับอันตราย ปฏิบัติตามประกาศและอพยพทันทีหากถูกสั่ง"][top];
+bn.innerHTML='<b>สถานะรวม: '+LV[top]+'</b><p>'+msg+'</p><div class="counts">'+c.map(function(n,i){return'<span class="chip l'+i+'">'+LV[i]+' '+n+'</span>'}).join("")+'</div>';
+var a=$("acts");a.innerHTML="";ACTS.forEach(function(x,i){if(i<=Math.max(0,top)||top>=2||i===0){}
+var show=(i===0&&top>=1)||(i===1&&top>=1)||(i===2&&top>=2)||(i===3&&top>=3);if(!show)return;
+var lb=document.createElement("label"),cb=document.createElement("input");cb.type="checkbox";cb.checked=!!acts[x[0]];
+cb.onchange=function(){acts[x[0]]=cb.checked};lb.appendChild(cb);lb.appendChild(document.createTextNode(x[0]));a.appendChild(lb)});
+if(!a.children.length)a.textContent="ตอนนี้ยังไม่มีรายการ จะแสดงเมื่อมีสถานีเข้าสู่ระดับเฝ้าระวัง"}
+function tabs(){var t=$("tabs");FILTERS.forEach(function(f){var b=document.createElement("button");b.textContent=f;b.setAttribute("aria-pressed",f===filter);
+b.onclick=function(){filter=f;[].forEach.call(t.children,function(x){x.setAttribute("aria-pressed",x.textContent===f)});
+ST.forEach(function(s){$("w"+s.id).style.display=(f==="ทั้งหมด"||s.type===f)?"":"none"})};t.appendChild(b)})}
+function init(){load();DISTRICTS.forEach(function(d){var o=document.createElement("option");o.textContent=d;$("rd").appendChild(o)});
+build();tabs();renderLog();update(false);
+$("rb").onclick=function(){var n=$("rn").value.trim();if(!n){$("rn").focus();return}
+addLog("รายงานชุมชน อ."+$("rd").value+" — "+$("rt").value+": "+n,2);$("rn").value="";save()}}
+init();
+
+function num(s){var n=parseFloat(s);return isNaN(n)?0:n}
+function addLogSafe(){}
+var DS=[["เมืองกาญจนบุรี","318443",311,349,14.005,99.546],["บ่อพลอย","318448",300,265,14.34,99.5],["เลาขวัญ","318449",370,138,14.8,99.75],["ศรีสวัสดิ์","318457",205,200,14.6,99.1],["ทองผาภูมิ","318455",85,165,14.74,98.64],["สังขละบุรี","318452",42,65,15.14,98.47]];
+var MD={},MCOL=["#cfd8dc","#7fd1f0","#3aa655","#f2a900","#d32f2f"],MLAB=["ไม่มีฝน","ฝนเล็กน้อย (0.1–10 มม.)","ฝนปานกลาง (10.1–35 มม.)","ฝนหนัก (35.1–90 มม.)","ฝนหนักมาก (มากกว่า 90 มม.)"];
+function mlvl(mm){return mm>90?4:mm>35?3:mm>10?2:mm>0?1:0}
+function sv(n,a){var e=document.createElementNS("http://www.w3.org/2000/svg",n);for(var k in a)e.setAttribute(k,a[k]);return e}
+function mapDraw(){var m=$("kmap");m.innerHTML="";
+m.appendChild(sv("polygon",{points:"30,20 80,10 120,60 150,130 210,150 260,90 330,60 380,90 395,180 390,300 370,370 320,400 250,385 200,335 150,300 110,250 70,230 40,150 25,80",fill:"var(--surf)",stroke:"var(--river)","stroke-width":2,"stroke-linejoin":"round"}));
+DS.forEach(function(d){var x=d[2],y=d[3],r=MD[d[1]],g=sv("g",{"class":"pt",tabindex:0,role:"button"});
+var lv=r?mlvl(r.r24):0;g.setAttribute("aria-label",d[0]+" "+(r?MLAB[lv]+" "+r.r24+" มม.":"ยังไม่มีข้อมูล"));
+if(r&&r.next>0)g.appendChild(sv("circle",{cx:x,cy:y,r:24,fill:"none",stroke:"var(--river)","stroke-width":2,"stroke-dasharray":"4 3"}));
+g.appendChild(sv("circle",{cx:x,cy:y,r:15,fill:r?MCOL[lv]:"var(--bg)",stroke:"var(--ink)","stroke-width":2,"stroke-dasharray":r?"0":"3 2"}));
+var t1=sv("text",{x:x,y:y+34,"text-anchor":"middle"});t1.textContent=d[0];g.appendChild(t1);
+var t2=sv("text",{x:x,y:y+4,"text-anchor":"middle","font-weight":700});t2.textContent=r?r.r24:"–";g.appendChild(t2);
+function show(){$("mapDet").textContent=r?("อ."+d[0]+": "+MLAB[lv]+" · ฝน 1 ชม. "+r.r1+" มม. · 3 ชม. "+r.r3+" มม. · 24 ชม. "+r.r24+" มม."+(r.sum?" · "+r.sum:"")):("อ."+d[0]+": ยังไม่มีข้อมูล")}
+g.addEventListener("click",show);g.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();show()}});
+m.appendChild(g)})}
+(function(){var l=$("mlegend");MLAB.forEach(function(t,i){var s=document.createElement("span"),c=document.createElement("i");c.style.background=MCOL[i];s.appendChild(c);s.appendChild(document.createTextNode(t));l.appendChild(s)});mapDraw()})();
+function mapMsg(t){$("mapMsg").textContent=t}
+function sumr(a,i,j){var t=0;for(var k=Math.max(0,i);k<=Math.min(a.length-1,j);k++)t+=(a[k]||0);return Math.round(t*10)/10}
+function loadRain(){
+var lat=DS.map(function(d){return d[4]}).join(","),lon=DS.map(function(d){return d[5]}).join(",");
+var url="https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+lon+"&hourly=precipitation&past_days=2&forecast_days=2&timezone=Asia%2FBangkok";
+var to=setTimeout(function(){mapMsg("ดึงข้อมูลฝนช้าผิดปกติ จะลองใหม่ให้อัตโนมัติ")},15000);
+fetch(url).then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.json()}).then(function(j){
+clearTimeout(to);var arr=Array.isArray(j)?j:[j],ok=0;
+arr.forEach(function(o,i){if(!o.hourly||!DS[i])return;var t=o.hourly.time,p=o.hourly.precipitation;
+var nowKey=new Date(Date.now()+7*3600*1000).toISOString().slice(0,13),idx=-1;
+for(var k=0;k<t.length;k++){if(t[k].slice(0,13)===nowKey){idx=k;break}}
+if(idx<0)return;
+var nx=sumr(p,idx+1,idx+3);
+MD[DS[i][1]]={r1:sumr(p,idx,idx),r3:sumr(p,idx-2,idx),r24:sumr(p,idx-23,idx),next:nx,f3:nx,f24:sumr(p,idx+1,idx+24),sum:"พยากรณ์ 3 ชม.ข้างหน้า "+nx+" มม. · 24 ชม.ข้างหน้า "+sumr(p,idx+1,idx+24)+" มม."};ok++});
+if(!ok){mapMsg("ได้รับข้อมูลแต่อ่านเวลาไม่ตรง ลองรีเฟรชหน้านี้");return}
+mapMsg("อัปเดตแล้ว "+ok+" จาก "+DS.length+" อำเภอ · "+new Date().toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit"})+" · ข้อมูล Open-Meteo (ผลจากแบบจำลอง ไม่ใช่สถานีวัดฝน)");
+mapDraw()}).catch(function(){clearTimeout(to);mapMsg("ดึงข้อมูลฝนไม่สำเร็จ (อาจไม่มีอินเทอร์เน็ตหรือบริการขัดข้อง) จะลองใหม่ใน 5 นาที ระหว่างนี้กรอกค่าฝนเองได้")})}
+$("fillRain").onclick=function(){var m=MD[DS[0][1]];if(!m){mapMsg("ยังไม่มีข้อมูลฝนจากแผนที่ รอสักครู่แล้วลองใหม่");return}
+ST.forEach(function(s){var d=null;DS.forEach(function(x){if(x[0]===s.d)d=MD[x[1]]});var v=(d||m).r24;s.rain=v;$("r"+s.id).value=v});update(true);save()};
+loadRain();setInterval(loadRain,300000);
+</script>
 </body>
 </html>
